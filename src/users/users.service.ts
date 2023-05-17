@@ -32,6 +32,10 @@ export class UsersService {
     });
   }
 
+  async findByEmail(email: string): Promise<User> {
+    return await this.usersRepository.findOneBy({ email });
+  }
+
   async findById(id: number): Promise<Omit<User, 'password'>> {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) throw new BadRequestException('user not found');
