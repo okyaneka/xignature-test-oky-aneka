@@ -15,30 +15,29 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    const count = this.usersService.findAll().length;
+    const count = (await this.usersService.findAll()).length;
 
     const userDto: User = {
-      id: (count + 1).toString(),
+      id: count + 1,
       ...createUserDto,
     };
 
-    this.usersService.create(userDto);
-    const { password, ...result } = userDto;
+    const result = await this.usersService.create(userDto);
     return result;
   }
 
   @Get('/:id')
-  async detail(@Param('id') id: string) {
+  async detail(@Param('id') id: number) {
     return this.usersService.findById(id);
   }
 
   @Post('/:id/update')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto.fullname);
   }
 
   @Delete('/:id')
-  async destroy(@Param('id') id: string) {
+  async destroy(@Param('id') id: number) {
     return this.usersService.destroy(id);
   }
 }
